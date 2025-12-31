@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    FILE: index.html
+    WHAT THIS IS:
+      A single-file website with 3 tabs. No frameworks needed.
+    HOW TO EDIT LATER:
+      - Change the site title: look for "My Only Website"
+      - Change tab names: look for data-tab="tab1" labels
+      - Change tab content: edit the <section id="tab1"> / tab2 / tab3 blocks
+      - Change colors/fonts: edit the CSS in <style>
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Only Website</title>
+
+  <style>
+    /*
+      ====== STYLING NOTES (CSS) ======
+      - Change font, background, and accent colors here.
+      - This is kept minimal and readable on phones.
+    */
+
+    :root {
+      --bg: #0b0b10;
+      --card: #13131c;
+      --text: #f2f2f7;
+      --muted: #b7b7c8;
+      --accent: #ff3b81;  /* Change this if you want a different vibe */
+      --border: rgba(255,255,255,0.10);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1000px 700px at 30% 0%, rgba(255,59,129,0.10), transparent 60%),
+                  radial-gradient(900px 650px at 90% 30%, rgba(0,160,255,0.10), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: clamp(24px, 4vw, 40px);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: rgba(19,19,28,0.78);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.35);
+    }
+
+    /* ====== TAB BAR ====== */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 650;
+      white-space: nowrap;
+      transition: transform 0.05s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    .tab-btn:hover { background: rgba(255,255,255,0.07); }
+    .tab-btn:active { transform: translateY(1px); }
+
+    /* Active tab look */
+    .tab-btn[aria-selected="true"] {
+      border-color: rgba(255,59,129,0.45);
+      background: rgba(255,59,129,0.12);
+      box-shadow: 0 0 0 3px rgba(255,59,129,0.08) inset;
+    }
+
+    /* ====== TAB PANELS ====== */
+    main {
+      padding: 18px 16px 20px;
+    }
+
+    .panel {
+      display: none; /* panels hidden by default; JS shows the active one */
+      animation: fadeIn 150ms ease-out;
+    }
+    .panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .panel p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .mini {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    a:hover { border-bottom-color: var(--accent); }
+
+    footer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(255,59,129,0.55);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <!-- EDIT: This is your site headline -->
+        <h1>My Only Website</h1>
+
+        <!-- EDIT: Little label you can change -->
+        <span class="badge"><span class="dot"></span> version 1.0</span>
+      </div>
+
+      <!-- EDIT: Short subtitle -->
+      <div class="badge" style="width: fit-content;">
+        This is a simple 3-tab page you can expand anytime.
+      </div>
+    </header>
+
+    <div class="card">
+      <!--
+        TAB BUTTONS:
+          - data-tab points to the ID of the content panel.
+          - You can rename the buttons without breaking anything.
+          - If you add a 4th tab later, copy a button and a panel, and match data-tab="tab4".
+      -->
+      <nav class="tabs" role="tablist" aria-label="Main Tabs">
+        <button class="tab-btn" role="tab" id="tabBtn1" data-tab="tab1" aria-controls="tab1" aria-selected="true">
+          Home
+        </button>
+        <button class="tab-btn" role="tab" id="tabBtn2" data-tab="tab2" aria-controls="tab2" aria-selected="false">
+          About
+        </button>
+        <button class="tab-btn" role="tab" id="tabBtn3" data-tab="tab3" aria-controls="tab3" aria-selected="false">
+          Links
+        </button>
+      </nav>
+
+      <main>
+        <!--
+          TAB PANELS:
+            - Each <section> is a panel.
+            - The ID must match a tab button's data-tab and aria-controls.
+            - Edit the text inside these sections to change your content.
+        -->
+
+        <section class="panel active" id="tab1" role="tabpanel" aria-labelledby="tabBtn1">
+          <h2>Welcome</h2>
+          <p>
+            This is your homepage. Keep it simple, clean, and meaningful.
+            You can turn this into anything: a message, a portfolio, a secret, a redirect hub.
+          </p>
+
+          <div class="grid">
+            <div class="mini">
+              <h2 style="font-size:16px; margin:0 0 8px;">What to edit</h2>
+              <p style="margin:0;">
+                Change this text by editing the <code>&lt;section id="tab1"&gt;</code> block.
+                You can also rename the tabs above.
+              </p>
+            </div>
+            <div class="mini">
+              <h2 style="font-size:16px; margin:0 0 8px;">Tattoo-safe tip</h2>
+              <p style="margin:0;">
+                If this domain is tied to a QR tattoo, keep the domain the same forever — only update this page.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="tab2" role="tabpanel" aria-labelledby="tabBtn2">
+          <h2>About</h2>
+          <p>
+            Put whatever you want here. A short bio, a vibe, your rules, or something mysterious.
+          </p>
+
+          <div class="mini">
+            <h2 style="font-size:16px; margin:0 0 8px;">Editable list</h2>
+            <p style="margin:0 0 10px;">You can replace these bullets with anything:</p>
+            <ul style="margin:0; padding-left: 18px; color: var(--muted); line-height: 1.6;">
+              <li>Who you are (or want to be).</li>
+              <li>What this site is for.</li>
+              <li>A quote, motto, or “devil heart” energy.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel" id="tab3" role="tabpanel" aria-labelledby="tabBtn3">
+          <h2>Links</h2>
+          <p>
+            Add links here. This tab is great for socials, projects, or a “scan me” surprise.
+          </p>
+
+          <div class="grid">
+            <div class="mini">
+              <h2 style="font-size:16px; margin:0 0 8px;">Example links</h2>
+              <p style="margin:0 0 10px;">Replace these URLs with your own:</p>
+              <ul style="margin:0; padding-left: 18px; line-height:1.7;">
+                <li><a href="https://example.com" target="_blank" rel="noopener">Example Link 1</a></li>
+                <li><a href="https://example.com" target="_blank" rel="noopener">Example Link 2</a></li>
+                <li><a href="https://example.com" target="_blank" rel="noopener">Example Link 3</a></li>
+              </ul>
+            </div>
+
+            <div class="mini">
+              <h2 style="font-size:16px; margin:0 0 8px;">Optional redirect note</h2>
+              <p style="margin:0;">
+                If you ever want your domain to forward somewhere else, you can do it via your hosting/DNS settings
+                or by making this page auto-redirect with JavaScript.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <!-- EDIT: Footer text -->
+          <span>© <span id="year"></span> Your Name</span>
+          <span>Built as a single HTML file.</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    /*
+      ====== FUNCTIONAL NOTES (JavaScript) ======
+      This script does:
+        1) Switches between the tab panels when you click a tab button
+        2) Updates the footer year automatically
+        3) Saves the last-opened tab in your browser (localStorage)
+
+      HOW TO EDIT:
+        - If you add a new tab:
+          a) Add a new button with data-tab="tab4"
+          b) Add a new <section id="tab4" class="panel">...</section>
+          c) Done. The script will handle it automatically.
+    */
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const panels = document.querySelectorAll(".panel");
+    const STORAGE_KEY = "mySite.activeTab";
+
+    function setActiveTab(tabId) {
+      // Hide all panels, show only the selected one
+      panels.forEach(p => p.classList.toggle("active", p.id === tabId));
+
+      // Update button accessibility states
+      tabButtons.forEach(btn => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.setAttribute("aria-selected", String(isActive));
+      });
+
+      // Remember chosen tab (so refresh keeps your place)
+      try { localStorage.setItem(STORAGE_KEY, tabId); } catch (_) {}
+    }
+
+    // Click handlers
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+    });
+
+    // Restore last-opened tab (if any)
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && document.getElementById(saved)) setActiveTab(saved);
+    } catch (_) {}
+
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
